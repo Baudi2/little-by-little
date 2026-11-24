@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#b9c98f">
 <link rel="manifest" href="manifest.webmanifest">
 <title>Проба</title>
-<!-- «Проба за день», этап 0: голый PixiJS без каркаса. Проверяет на телефоне строку состояния, рябь линии на общем виде, кадры, память и возврат из фона. -->
+<!-- «Проба за день», этап 0, вторая версия (24.11.2026: деревья не обрезаны, огонь из отдельных языков, дым и огонь не запечены в пекарню): голый PixiJS без каркаса. Проверяет на телефоне строку состояния, рябь линии на общем виде, кадры, память и возврат из фона. -->
 <style>
 html,body{margin:0;height:100%;background:#b9c98f;overflow:hidden;font:600 12px/1.4 system-ui,-apple-system,sans-serif;color:#3b2a24;touch-action:none;-webkit-user-select:none;user-select:none}
 canvas{position:fixed;inset:0;display:block}
@@ -37,6 +37,7 @@ button{font:inherit;font-size:13px;min-height:44px;min-width:60px;padding:0 10px
 <script>
 (async()=>{
 const Q=new URLSearchParams(location.search),D=Q.get('d')==='3'?3:2,MIP=Q.get('mip')!=='0',$=i=>document.getElementById(i),hud=$('hud');
+const VER='2'; // менять при каждой перезапечке картинок
 const WORLD_W=800,WORLD_H=3600,runs=[];let lost=0,restored=0,returns=0,persisted='?',glInfo='?',maxTex='?',texMB=0,note='';
 const go=p=>{const q=new URLSearchParams(location.search);for(const k in p)q.set(k,p[k]);location.search=q.toString();};
 $('bDens').onclick=()=>go({d:D===2?3:2});$('bMip').onclick=()=>go({mip:MIP?0:1});
@@ -49,29 +50,38 @@ try{
   document.body.insertBefore(app.canvas,document.body.firstChild);window.probeApp=app;
   app.canvas.addEventListener('webglcontextlost',()=>{lost++;});app.canvas.addEventListener('webglcontextrestored',()=>{restored++;});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)returns++;});
-  const idx=await (await fetch('assets/index.json')).json();
-  const load=n=>PIXI.Assets.load({src:'assets/'+idx[n]['d'+D].file,data:{autoGenerateMipmaps:MIP}});
-  const NAMES=['ground','bakery8','cat','tree','spruce','puff','flame','bee'];
-  const [tG,tB,tC,tT,tS,tP,tF,tBee]=await Promise.all(NAMES.map(load));
+  const idx=await (await fetch('assets/index.json?v='+VER)).json();
+  const load=n=>PIXI.Assets.load({src:'assets/'+idx[n]['d'+D].file+'?v='+VER,data:{autoGenerateMipmaps:MIP}});
+  const NAMES=['ground','bakery8','cat','tree','spruce','puff','bee','fireBed','fireL','fireR','fireC','fireCore','spark'];
+  const T={};(await Promise.all(NAMES.map(load))).forEach((t,i)=>T[NAMES[i]]=t);
+  // Картинка ставится по точке рисунка (px,py): рамка каждой картинки записана при запекании, поэтому обрезка рамки ничего не сдвигает
+  const mk=(n,px=0,py=0)=>{const v=idx[n]['d'+D].vb,s=new PIXI.Sprite(T[n]);s.anchor.set((px-v[0])/v[2],(py-v[1])/v[3]);s.scale.set(1/D);return s;};
   for(const n of NAMES){const a=idx[n]['d'+D];texMB+=a.w*a.h*4*(MIP?4/3:1)/1048576;}
   const gl=app.renderer.gl;if(gl){maxTex=gl.getParameter(gl.MAX_TEXTURE_SIZE);glInfo=(window.WebGL2RenderingContext&&gl instanceof WebGL2RenderingContext)?'WebGL 2':'WebGL 1';}else glInfo=app.renderer.name||'не WebGL';
   if(navigator.storage&&navigator.storage.persisted){try{persisted=(await navigator.storage.persisted())?'да':'нет';}catch(e){}}
 
   // Мир 800 × 3600: земля — одна картинка 800 × 1200 три раза подряд; двенадцать пекарен на участках 320 × 300, шаг рядов 360; пятнадцать котов
   const world=new PIXI.Container();app.stage.addChild(world);
-  for(let i=0;i<3;i++){const g=new PIXI.Sprite(tG);g.scale.set(1/D);g.y=i*1200;world.addChild(g);}
+  for(let i=0;i<3;i++){const g=mk('ground');g.y=i*1200;world.addChild(g);}
   const cats=[];
-  for(let r=0;r<6;r++)for(let c=0;c<2;c++){const b=new PIXI.Sprite(tB);b.scale.set(1/D);b.position.set((c?460:20)+22,160+r*360+3);world.addChild(b);}
-  for(let i=0;i<15;i++){const s=new PIXI.Sprite(tC);s.anchor.set(.5,1);s.scale.set(1/D);s.position.set((i%2?470:30)+50+(i*53)%220,160+(i%6)*360+268+(i%3)*10);s.ph=i*.7;cats.push(s);world.addChild(s);}
+  // начало рисунка пекарни на участке: участок (20|460, 160+шаг), рисунок сдвинут на (18,-85)
+  const OX=c=>(c?460:20)+18,OY=r=>160+r*360-85,LIVE=idx.bakery8.live||[];
+  for(let r=0;r<6;r++)for(let c=0;c<2;c++){const b=mk('bakery8');b.position.set(OX(c),OY(r));world.addChild(b);}
+  for(let i=0;i<15;i++){const s=mk('cat',46,80);s.position.set((i%2?470:30)+50+(i*53)%220,160+(i%6)*360+268+(i%3)*10);s.ph=i*.7;cats.push(s);world.addChild(s);}
   // Живая поляна: всё движется. 48 деревьев качаются, над каждой пекарней три клуба дыма, в каждой печи огонь, 24 пчелы кружат
   const trees=[],puffs=[],flames=[],bees=[];
   for(let r=0;r<6;r++){const y=160+r*360;
-    [[8,y+150,tS],[792,y+170,tT],[10,y+330,tT],[790,y+340,tS],[292,y+296,r%2?tS:tT],[728,y+296,r%2?tT:tS],[352,y+250,tS],[450,y+262,tT]].forEach((p,i)=>{
-      const s=new PIXI.Sprite(p[2]);s.anchor.set(.5,.93);s.scale.set(1/D);s.position.set(p[0],p[1]);s.ph=r*1.3+i*.9;trees.push(s);world.addChild(s);});
-    for(let c=0;c<2;c++){const bx=(c?460:20)+22,by=y+3;
-      const f=new PIXI.Sprite(tF);f.anchor.set(.5,1);f.position.set(bx+173,by+128);f.ph=r*2+c;flames.push(f);world.addChild(f);
-      for(let j=0;j<3;j++){const p=new PIXI.Sprite(tP);p.anchor.set(.5);p.x0=bx+212;p.y0=by+2;p.ph=j/3+(r*2+c)*.13;puffs.push(p);world.addChild(p);}
-      for(let j=0;j<2;j++){const b=new PIXI.Sprite(tBee);b.anchor.set(.5);b.scale.set(1/D);b.cx=bx+40+j*150;b.cy=by+250+j*20;b.r=14+j*8;b.sp=1.6+((r*2+c+j)%5)*.25;b.ph=r+c*2+j*3;bees.push(b);world.addChild(b);}}}
+    [[8,y+150,'spruce'],[792,y+170,'tree'],[10,y+330,'tree'],[790,y+340,'spruce'],[292,y+296,r%2?'spruce':'tree'],[728,y+296,r%2?'tree':'spruce'],[352,y+250,'spruce'],[450,y+262,'tree']].forEach((p,i)=>{
+      const s=p[2]==='tree'?mk('tree',0,44):mk('spruce',0,45);s.position.set(p[0],p[1]);s.ph=r*1.3+i*.9;trees.push(s);world.addChild(s);});
+    for(let c=0;c<2;c++){const bx=(c?460:20)+22,by=y+3,ox=OX(c),oy=OY(r);
+      // дым и огонь стоят там, где их рисовал сам рисунок пекарни: места записаны при запекании
+      for(const [kind,lx,ly,lk] of LIVE){
+        if(kind==='fire'){ // огонь из частей: подушка углей, три языка, сердцевина, искра; каждая часть качается сама
+          const f=new PIXI.Container();f.position.set(ox+lx,oy+ly);f.scale.set(lk||1);f.ph=(r*2+c)*1.7;
+          f.bed=mk('fireBed');f.L=mk('fireL');f.L.x=-5;f.R=mk('fireR');f.R.x=5.5;f.C=mk('fireC');f.core=mk('fireCore');f.core.x=.4;f.spark=mk('spark');f.spark.scale.set(.7/D);
+          f.addChild(f.bed,f.L,f.R,f.C,f.core,f.spark);flames.push(f);world.addChild(f);}
+        if(kind==='smoke')for(let j=0;j<3;j++){const p=mk('puff');p.x0=ox+lx;p.y0=oy+ly;p.ph=j/3+(r*2+c)*.13;puffs.push(p);world.addChild(p);}}
+      for(let j=0;j<2;j++){const b=mk('bee');b.cx=bx+40+j*150;b.cy=by+250+j*20;b.r=14+j*8;b.sp=1.6+((r*2+c+j)%5)*.25;b.ph=r+c*2+j*3;bees.push(b);world.addChild(b);}}}
 
   // Камера: палец двигает, два пальца меняют масштаб; общий вид — мир по ширине экрана, вблизи — 390 единиц по ширине
   const cam={x:0,y:0,k:1},W=()=>app.screen.width,H=()=>app.screen.height,kFar=()=>W()/WORLD_W,kNear=()=>W()/390;
@@ -99,8 +109,15 @@ try{
   app.ticker.add(()=>{const now=performance.now(),dt=now-last;last=now;t+=dt/1000;roll.push(dt);if(roll.length>180)roll.shift();
     for(const s of cats){s.rotation=Math.sin(t*3+s.ph)*.06;s.scale.y=(1+Math.sin(t*6+s.ph)*.03)/D;}
     for(const s of trees)s.rotation=Math.sin(t*1.1+s.ph)*.022+Math.sin(t*2.7+s.ph*2)*.006;
-    for(const f of flames)f.scale.set((.82+Math.sin(t*17+f.ph)*.08)/D,(.84+Math.sin(t*23+f.ph*1.7)*.14)/D);
-    for(const p of puffs){const k=(t/3+p.ph)%1;p.position.set(p.x0+k*16,p.y0-k*44);p.scale.set((.6+k*.9)/D);p.alpha=(k<.15?k/.15:1-k)*.85;}
+    // Огонь: языки медленно клонятся в стороны и вытягиваются, каждый в своём ритме (полный качок около двух секунд); вся картинка целиком не прыгает
+    for(const f of flames){const p=f.ph,sw=Math.sin(t*1.9+p+4)*.08,st=Math.sin(t*2.9+p);
+      f.L.rotation=-.12+Math.sin(t*2.6+p)*.14+Math.sin(t*4.3+p*2)*.05;f.L.scale.y=(1+Math.sin(t*3.4+p*1.3)*.13)/D;
+      f.R.rotation=.12+Math.sin(t*2.2+p+2)*.14+Math.sin(t*4.9+p)*.05;f.R.scale.y=(1+Math.sin(t*3.9+p+1)*.13)/D;
+      f.C.rotation=sw;f.C.scale.set((1-st*.04)/D,(1+st*.09)/D);
+      f.core.rotation=sw*.7;f.core.scale.y=(1+Math.sin(t*3.3+p+.6)*.1)/D;
+      const k=(t/2.8+p*.37)%1;f.spark.position.set(2+Math.sin(k*5+p)*3,-7-k*15);f.spark.alpha=k<.1?k/.1:1-k;}
+    // Дым: клуб поднимается от трубы вверх и чуть вбок, растёт и тает; путь тот же, что у нарисованного дыма
+    for(const p of puffs){const k=(t/4.5+p.ph)%1;p.position.set(p.x0+k*24+Math.sin(k*5+p.ph*9)*2,p.y0-k*36);p.scale.set((.65+k*.5)/D);p.alpha=(k<.12?k/.12:1-k)*.85;}
     for(const b of bees){const a=t*b.sp+b.ph;b.position.set(b.cx+Math.cos(a)*b.r,b.cy+Math.sin(a*1.3)*b.r*.6);b.scale.x=(Math.sin(a)>0?-1:1)/D;}
     if(auto){const el=(now-auto.t0)/1000;if(el>.5)auto.dts.push(dt);const vh=H()/cam.k;cam.y=(WORLD_H-vh)*(.5-.5*Math.cos(el*Math.PI*2/10));apply();
       if(el>=30){const a=auto.dts,avg=a.reduce((x,y)=>x+y,0)/a.length;runs.push(`замер, ${auto.view}, картинки ×${D}${MIP?'':', без мелких копий'}: 95% кадров не дольше ${pct(a,.95).toFixed(1)} мс, худший ${Math.max(...a).toFixed(0)} мс, в среднем ${(1000/avg).toFixed(0)} кадров в секунду`);auto=null;$('bAuto').textContent='замер 30 с';}}});
@@ -110,8 +127,8 @@ try{
   setInterval(()=>{const r=safe.getBoundingClientRect(),avg=roll.reduce((x,y)=>x+y,0)/Math.max(1,roll.length);
     const alone=window.navigator.standalone===true||matchMedia('(display-mode: standalone)').matches;
     hud.textContent=[
-      `экран ${innerWidth} × ${innerHeight} точек, плотность ${window.devicePixelRatio}, рисуем ×${app.renderer.resolution}`,
-      `открыто: ${alone?'с домашнего экрана':'во вкладке браузера'}`,
+      `окно ${innerWidth} × ${innerHeight} точек, экран телефона ${screen.width} × ${screen.height}, плотность ${+window.devicePixelRatio.toFixed(2)}, рисуем ×${+app.renderer.resolution.toFixed(2)}`,
+      `проба, версия ${VER}; открыто: ${alone?'с домашнего экрана':'во вкладке браузера'}`,
       `отступы безопасной области: сверху ${Math.round(r.top)}, снизу ${Math.round(innerHeight-r.bottom)}, слева ${Math.round(r.left)}, справа ${Math.round(innerWidth-r.right)}`,
       `красный пунктир — край экрана, синяя рамка — безопасная область`,
       roll.length?`сейчас: ${(1000/avg).toFixed(0)} кадров в секунду, 95% кадров не дольше ${pct(roll,.95).toFixed(1)} мс; масштаб ${isNear()?'вблизи':'общий вид'}`:'кадры пока не идут: страница не на экране',
