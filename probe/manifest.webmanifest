@@ -1,0 +1,10 @@
+{
+  "name": "Little by little — проба",
+  "short_name": "Проба",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#b9c98f",
+  "theme_color": "#b9c98f",
+  "start_url": ".",
+  "scope": "."
+}

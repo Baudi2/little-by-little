@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#b9c98f">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Проба</title>
+<!-- «Проба за день», этап 0: голый PixiJS без каркаса. Проверяет на телефоне строку состояния, рябь линии на общем виде, кадры, память и возврат из фона. -->
+<style>
+html,body{margin:0;height:100%;background:#b9c98f;overflow:hidden;font:600 12px/1.4 system-ui,-apple-system,sans-serif;color:#3b2a24;touch-action:none;-webkit-user-select:none;user-select:none}
+canvas{position:fixed;inset:0;display:block}
+#edge{position:fixed;inset:0;border:2px dashed rgba(217,96,79,.85);pointer-events:none;box-sizing:border-box}
+#safe{position:fixed;top:env(safe-area-inset-top,0px);bottom:env(safe-area-inset-bottom,0px);left:env(safe-area-inset-left,0px);right:env(safe-area-inset-right,0px);border:2px solid rgba(60,120,200,.85);pointer-events:none;box-sizing:border-box}
+#hud{position:fixed;left:8px;right:8px;top:calc(env(safe-area-inset-top,0px) + 6px);background:rgba(251,243,223,.92);border-radius:10px;padding:6px 8px;white-space:pre-wrap;pointer-events:none;font-variant-numeric:tabular-nums}
+#hud.off{display:none}
+#bar{position:fixed;left:8px;right:8px;bottom:calc(env(safe-area-inset-bottom,0px) + 8px);display:flex;flex-wrap:wrap;gap:6px}
+button{font:inherit;font-size:13px;min-height:44px;min-width:60px;padding:0 10px;border-radius:10px;border:1px solid #6b5a4c;background:#fbf3df;color:#3b2a24}
+</style>
+</head>
+<body>
+<div id="edge"></div><div id="safe"></div>
+<div id="hud">загрузка…</div>
+<div id="bar">
+  <button id="bView">ближе</button>
+  <button id="bAuto">замер 30 с</button>
+  <button id="bDens">плотность</button>
+  <button id="bMip">мелкие копии</button>
+  <button id="bLose">потеря графики</button>
+  <button id="bHud">скрыть текст</button>
+  <button id="bCopy">скопировать</button>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/pixi.js@8.9.2/dist/pixi.min.js"></script>
+<script>
+(async()=>{
+const Q=new URLSearchParams(location.search),D=Q.get('d')==='3'?3:2,MIP=Q.get('mip')!=='0',$=i=>document.getElementById(i),hud=$('hud');
+const WORLD_W=800,WORLD_H=3600,runs=[];let lost=0,restored=0,returns=0,persisted='?',glInfo='?',maxTex='?',texMB=0,note='';
+const go=p=>{const q=new URLSearchParams(location.search);for(const k in p)q.set(k,p[k]);location.search=q.toString();};
+$('bDens').onclick=()=>go({d:D===2?3:2});$('bMip').onclick=()=>go({mip:MIP?0:1});
+$('bHud').onclick=()=>{const off=hud.classList.toggle('off');$('bHud').textContent=off?'показать текст':'скрыть текст';};
+$('bCopy').onclick=async()=>{try{await navigator.clipboard.writeText(hud.textContent);$('bCopy').textContent='скопировано';}catch(e){$('bCopy').textContent='не вышло';}setTimeout(()=>$('bCopy').textContent='скопировать',1500);};
+try{
+  if(!window.PIXI)throw new Error('PixiJS не загрузился: нужна сеть');
+  const app=new PIXI.Application();
+  await app.init({resizeTo:window,background:'#b9c98f',resolution:Math.min(window.devicePixelRatio||1,3),autoDensity:true,antialias:false,preference:'webgl'});
+  document.body.insertBefore(app.canvas,document.body.firstChild);window.probeApp=app;
+  app.canvas.addEventListener('webglcontextlost',()=>{lost++;});app.canvas.addEventListener('webglcontextrestored',()=>{restored++;});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)returns++;});
+  const idx=await (await fetch('assets/index.json')).json();
+  const load=n=>PIXI.Assets.load({src:'assets/'+idx[n]['d'+D].file,data:{autoGenerateMipmaps:MIP}});
+  const NAMES=['ground','bakery8','cat','tree','spruce','puff','flame','bee'];
+  const [tG,tB,tC,tT,tS,tP,tF,tBee]=await Promise.all(NAMES.map(load));
+  for(const n of NAMES){const a=idx[n]['d'+D];texMB+=a.w*a.h*4*(MIP?4/3:1)/1048576;}
+  const gl=app.renderer.gl;if(gl){maxTex=gl.getParameter(gl.MAX_TEXTURE_SIZE);glInfo=(window.WebGL2RenderingContext&&gl instanceof WebGL2RenderingContext)?'WebGL 2':'WebGL 1';}else glInfo=app.renderer.name||'не WebGL';
+  if(navigator.storage&&navigator.storage.persisted){try{persisted=(await navigator.storage.persisted())?'да':'нет';}catch(e){}}
+
+  // Мир 800 × 3600: земля — одна картинка 800 × 1200 три раза подряд; двенадцать пекарен на участках 320 × 300, шаг рядов 360; пятнадцать котов
+  const world=new PIXI.Container();app.stage.addChild(world);
+  for(let i=0;i<3;i++){const g=new PIXI.Sprite(tG);g.scale.set(1/D);g.y=i*1200;world.addChild(g);}
+  const cats=[];
+  for(let r=0;r<6;r++)for(let c=0;c<2;c++){const b=new PIXI.Sprite(tB);b.scale.set(1/D);b.position.set((c?460:20)+22,160+r*360+3);world.addChild(b);}
+  for(let i=0;i<15;i++){const s=new PIXI.Sprite(tC);s.anchor.set(.5,1);s.scale.set(1/D);s.position.set((i%2?470:30)+50+(i*53)%220,160+(i%6)*360+268+(i%3)*10);s.ph=i*.7;cats.push(s);world.addChild(s);}
+  // Живая поляна: всё движется. 48 деревьев качаются, над каждой пекарней три клуба дыма, в каждой печи огонь, 24 пчелы кружат
+  const trees=[],puffs=[],flames=[],bees=[];
+  for(let r=0;r<6;r++){const y=160+r*360;
+    [[8,y+150,tS],[792,y+170,tT],[10,y+330,tT],[790,y+340,tS],[292,y+296,r%2?tS:tT],[728,y+296,r%2?tT:tS],[352,y+250,tS],[450,y+262,tT]].forEach((p,i)=>{
+      const s=new PIXI.Sprite(p[2]);s.anchor.set(.5,.93);s.scale.set(1/D);s.position.set(p[0],p[1]);s.ph=r*1.3+i*.9;trees.push(s);world.addChild(s);});
+    for(let c=0;c<2;c++){const bx=(c?460:20)+22,by=y+3;
+      const f=new PIXI.Sprite(tF);f.anchor.set(.5,1);f.position.set(bx+173,by+128);f.ph=r*2+c;flames.push(f);world.addChild(f);
+      for(let j=0;j<3;j++){const p=new PIXI.Sprite(tP);p.anchor.set(.5);p.x0=bx+212;p.y0=by+2;p.ph=j/3+(r*2+c)*.13;puffs.push(p);world.addChild(p);}
+      for(let j=0;j<2;j++){const b=new PIXI.Sprite(tBee);b.anchor.set(.5);b.scale.set(1/D);b.cx=bx+40+j*150;b.cy=by+250+j*20;b.r=14+j*8;b.sp=1.6+((r*2+c+j)%5)*.25;b.ph=r+c*2+j*3;bees.push(b);world.addChild(b);}}}
+
+  // Камера: палец двигает, два пальца меняют масштаб; общий вид — мир по ширине экрана, вблизи — 390 единиц по ширине
+  const cam={x:0,y:0,k:1},W=()=>app.screen.width,H=()=>app.screen.height,kFar=()=>W()/WORLD_W,kNear=()=>W()/390;
+  const apply=()=>{cam.k=Math.max(kFar(),Math.min(kNear()*1.6,cam.k));const vw=W()/cam.k,vh=H()/cam.k;cam.x=Math.max(0,Math.min(WORLD_W-vw,cam.x));cam.y=Math.max(0,Math.min(WORLD_H-vh,cam.y));world.scale.set(cam.k);world.position.set(-cam.x*cam.k,-cam.y*cam.k);};
+  cam.k=kFar();apply();window.addEventListener('resize',()=>setTimeout(apply,50));
+  const isNear=()=>cam.k>(kFar()+kNear())/2;
+  $('bView').onclick=()=>{const cx=cam.x+W()/cam.k/2,cy=cam.y+H()/cam.k/2;cam.k=isNear()?kFar():kNear();cam.x=cx-W()/cam.k/2;cam.y=cy-H()/cam.k/2;apply();$('bView').textContent=isNear()?'общий вид':'ближе';};
+  const pts=new Map();let pinch=0,auto=null;
+  app.canvas.addEventListener('pointerdown',e=>{pts.set(e.pointerId,[e.clientX,e.clientY]);});
+  app.canvas.addEventListener('pointermove',e=>{const p=pts.get(e.pointerId);if(!p||auto)return;
+    if(pts.size===1){cam.x-=(e.clientX-p[0])/cam.k;cam.y-=(e.clientY-p[1])/cam.k;}
+    pts.set(e.pointerId,[e.clientX,e.clientY]);
+    if(pts.size===2){const [a,b]=[...pts.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]);
+      if(pinch){const mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,wx=cam.x+mx/cam.k,wy=cam.y+my/cam.k;cam.k*=d/pinch;cam.k=Math.max(kFar(),Math.min(kNear()*1.6,cam.k));cam.x=wx-mx/cam.k;cam.y=wy-my/cam.k;}pinch=d;}
+    apply();});
+  for(const n of['pointerup','pointercancel','pointerout'])app.canvas.addEventListener(n,e=>{pts.delete(e.pointerId);pinch=0;});
+
+  // Потеря графики: телефон может отобрать её у сайта в фоне; здесь она отбирается нарочно и через секунду возвращается
+  $('bLose').onclick=()=>{const ext=gl&&gl.getExtension('WEBGL_lose_context');if(!ext){note='потерю графики здесь вызвать нельзя';return;}ext.loseContext();setTimeout(()=>{try{ext.restoreContext();}catch(e){note='графика не вернулась: '+e.message;}},1000);};
+
+  // Замер: 30 секунд карта сама ездит вверх и вниз, записывается длительность каждого кадра
+  $('bAuto').onclick=()=>{auto={t0:performance.now(),dts:[],view:isNear()?'вблизи':'общий вид'};$('bAuto').textContent='идёт замер…';};
+  const pct=(a,p)=>{if(!a.length)return 0;const s=[...a].sort((x,y)=>x-y);return s[Math.min(s.length-1,Math.floor(s.length*p))];};
+  let last=performance.now(),t=0;const roll=[];
+  app.ticker.add(()=>{const now=performance.now(),dt=now-last;last=now;t+=dt/1000;roll.push(dt);if(roll.length>180)roll.shift();
+    for(const s of cats){s.rotation=Math.sin(t*3+s.ph)*.06;s.scale.y=(1+Math.sin(t*6+s.ph)*.03)/D;}
+    for(const s of trees)s.rotation=Math.sin(t*1.1+s.ph)*.022+Math.sin(t*2.7+s.ph*2)*.006;
+    for(const f of flames)f.scale.set((.82+Math.sin(t*17+f.ph)*.08)/D,(.84+Math.sin(t*23+f.ph*1.7)*.14)/D);
+    for(const p of puffs){const k=(t/3+p.ph)%1;p.position.set(p.x0+k*16,p.y0-k*44);p.scale.set((.6+k*.9)/D);p.alpha=(k<.15?k/.15:1-k)*.85;}
+    for(const b of bees){const a=t*b.sp+b.ph;b.position.set(b.cx+Math.cos(a)*b.r,b.cy+Math.sin(a*1.3)*b.r*.6);b.scale.x=(Math.sin(a)>0?-1:1)/D;}
+    if(auto){const el=(now-auto.t0)/1000;if(el>.5)auto.dts.push(dt);const vh=H()/cam.k;cam.y=(WORLD_H-vh)*(.5-.5*Math.cos(el*Math.PI*2/10));apply();
+      if(el>=30){const a=auto.dts,avg=a.reduce((x,y)=>x+y,0)/a.length;runs.push(`замер, ${auto.view}, картинки ×${D}${MIP?'':', без мелких копий'}: 95% кадров не дольше ${pct(a,.95).toFixed(1)} мс, худший ${Math.max(...a).toFixed(0)} мс, в среднем ${(1000/avg).toFixed(0)} кадров в секунду`);auto=null;$('bAuto').textContent='замер 30 с';}}});
+
+  // Текст на экране: всё, что нужно записать после пробы
+  const safe=$('safe');
+  setInterval(()=>{const r=safe.getBoundingClientRect(),avg=roll.reduce((x,y)=>x+y,0)/Math.max(1,roll.length);
+    const alone=window.navigator.standalone===true||matchMedia('(display-mode: standalone)').matches;
+    hud.textContent=[
+      `экран ${innerWidth} × ${innerHeight} точек, плотность ${window.devicePixelRatio}, рисуем ×${app.renderer.resolution}`,
+      `открыто: ${alone?'с домашнего экрана':'во вкладке браузера'}`,
+      `отступы безопасной области: сверху ${Math.round(r.top)}, снизу ${Math.round(innerHeight-r.bottom)}, слева ${Math.round(r.left)}, справа ${Math.round(innerWidth-r.right)}`,
+      `красный пунктир — край экрана, синяя рамка — безопасная область`,
+      roll.length?`сейчас: ${(1000/avg).toFixed(0)} кадров в секунду, 95% кадров не дольше ${pct(roll,.95).toFixed(1)} мс; масштаб ${isNear()?'вблизи':'общий вид'}`:'кадры пока не идут: страница не на экране',
+      `движется: 15 котов, ${trees.length} деревьев, ${puffs.length} клубов дыма, ${flames.length} огней, ${bees.length} пчёл`,
+      `картинки ×${D}, мелкие копии ${MIP?'включены':'выключены'}; текстур в памяти около ${texMB.toFixed(0)} МБ`,
+      `${glInfo}, предел текстуры ${maxTex}; потерь графики ${lost}, возвратов графики ${restored}, возвратов из фона ${returns}`,
+      `постоянное хранилище: ${persisted}`,
+      ...runs,note,navigator.userAgent.replace(/^Mozilla\/5\.0 /,'')].filter(Boolean).join('\n');},500);
+}catch(e){hud.textContent='ошибка: '+(e&&e.stack||e);}
+})();
+</script>
+</body>
+</html>
