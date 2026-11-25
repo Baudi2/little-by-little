@@ -1,0 +1,1369 @@
+{
+ "made": "2026-11-25",
+ "by": "tools/bake.cjs",
+ "units": "Единицы рисунка. Картинка плотности ×D — D точек на единицу; в листах PixiJS это meta.scale. Опорная точка картинки (anchor) стоит в точке рисунка предмета или в точке вращения части.",
+ "densities": [
+  2,
+  3
+ ],
+ "sheets": {
+  "2": [
+   "sheet-0.json"
+  ],
+  "3": [
+   "sheet-0.json"
+  ]
+ },
+ "objects": {
+  "bakery": {
+   "title": "Пекарня 1–3-го уровня (ступень «Лоток»)",
+   "origin": [
+    128,
+    292
+   ],
+   "layers": [
+    {
+     "name": "earth",
+     "frame": "bakery/earth",
+     "z": 0,
+     "at": [
+      0,
+      0
+     ]
+    },
+    {
+     "name": "floor",
+     "frame": "bakery/floor",
+     "z": 1,
+     "at": [
+      0,
+      0
+     ]
+    },
+    {
+     "name": "stove",
+     "frame": "bakery/stove",
+     "z": 2,
+     "at": [
+      0,
+      0
+     ]
+    },
+    {
+     "name": "sign",
+     "frame": "bakery/sign",
+     "z": 3,
+     "at": [
+      0,
+      0
+     ]
+    },
+    {
+     "name": "poles",
+     "frame": "bakery/poles",
+     "z": 4,
+     "at": [
+      0,
+      0
+     ]
+    },
+    {
+     "name": "crate",
+     "frame": "bakery/crate",
+     "z": 5,
+     "at": [
+      0,
+      0
+     ]
+    },
+    {
+     "name": "awning",
+     "frame": "bakery/awning",
+     "z": 6,
+     "at": [
+      0,
+      0
+     ]
+    },
+    {
+     "name": "sack1",
+     "frame": "bakery/sack1",
+     "z": 7,
+     "at": [
+      0,
+      0
+     ]
+    },
+    {
+     "name": "sack2",
+     "frame": "bakery/sack2",
+     "z": 8,
+     "at": [
+      0,
+      0
+     ]
+    },
+    {
+     "name": "boards",
+     "frame": "bakery/boards",
+     "z": 9,
+     "at": [
+      0,
+      0
+     ]
+    }
+   ],
+   "levels": {
+    "1": [
+     "earth",
+     "stove",
+     "crate"
+    ],
+    "2": [
+     "earth",
+     "stove",
+     "poles",
+     "crate",
+     "awning",
+     "sack1"
+    ],
+    "3": [
+     "floor",
+     "stove",
+     "sign",
+     "poles",
+     "crate",
+     "awning",
+     "sack1",
+     "sack2",
+     "boards"
+    ]
+   },
+   "build": {
+    "note": "Части уровня 3 — моё предложение, окончательно решается на ревью шага 4: 1-я часть ставит леса и штабель, 2-я кладёт дощатый пол, 3-я (последняя) снимает леса и даёт уровень 3. У уровня 2 одна часть — она же последняя, леса не встают.",
+    "scaffold": {
+     "frame": "build/scaffold",
+     "z": "поверх слоёв пекарни, под котом",
+     "perch": [
+      70,
+      -85.5
+     ],
+     "at": [
+      0,
+      0
+     ]
+    },
+    "stack": {
+     "frame": "build/stack",
+     "z": "поверх слоёв пекарни",
+     "at": [
+      0,
+      0
+     ]
+    },
+    "parts": {
+     "2": [
+      {
+       "level": 2
+      }
+     ],
+     "3": [
+      {
+       "show": 2,
+       "add": [
+        "scaffold",
+        "stack"
+       ]
+      },
+      {
+       "show": 2,
+       "add": [
+        "scaffold",
+        "stack"
+       ],
+       "swap": {
+        "earth": "floor"
+       }
+      },
+      {
+       "level": 3
+      }
+     ]
+    }
+   },
+   "workers": [
+    {
+     "who": "cat",
+     "at": [
+      16,
+      -20.25
+     ],
+     "z": "после всех слоёв пекарни"
+    }
+   ],
+   "live": [
+    {
+     "kind": "smoke",
+     "at": [
+      66,
+      -106
+     ],
+     "k": 1
+    },
+    {
+     "kind": "fire",
+     "at": [
+      66,
+      -51
+     ],
+     "k": 0.62
+    }
+   ]
+  },
+  "cat": {
+   "title": "Кот-пекарь, кукла из частей (масть COATS[0])",
+   "origin": [
+    40,
+    75.75
+   ],
+   "scale": 0.5,
+   "parts": [
+    {
+     "name": "shadow",
+     "frame": "cat/shadow",
+     "z": 0,
+     "at": [
+      0,
+      0
+     ]
+    },
+    {
+     "name": "tail",
+     "frame": "cat/tail",
+     "z": 1,
+     "at": [
+      13,
+      -15.25
+     ]
+    },
+    {
+     "name": "footL",
+     "frame": "cat/footL",
+     "z": 2,
+     "at": [
+      -6.5,
+      -3.25
+     ]
+    },
+    {
+     "name": "footR",
+     "frame": "cat/footR",
+     "z": 3,
+     "at": [
+      6.5,
+      -3.25
+     ]
+    },
+    {
+     "name": "body",
+     "frame": "cat/body",
+     "z": 4,
+     "at": [
+      0,
+      -5.25
+     ]
+    },
+    {
+     "name": "head",
+     "frame": "cat/head",
+     "z": 5,
+     "at": [
+      0,
+      -30.75
+     ]
+    },
+    {
+     "name": "tray",
+     "frame": "cat/tray",
+     "z": 6,
+     "at": [
+      0,
+      -17.25
+     ]
+    },
+    {
+     "name": "armL",
+     "frame": "cat/armL",
+     "z": 7,
+     "at": [
+      -13.5,
+      -27.25
+     ]
+    },
+    {
+     "name": "armR",
+     "frame": "cat/armR",
+     "z": 8,
+     "at": [
+      13.5,
+      -27.25
+     ]
+    }
+   ]
+  },
+  "hammock-cat": {
+   "title": "Гамак кота: корзина на столбе с когтеточкой",
+   "frame": "hammock/cat",
+   "origin": [
+    0,
+    0
+   ]
+  },
+  "live": {
+   "title": "Живые части: ставятся по месту из описи предмета и движутся сами",
+   "smoke": [
+    "live/puff"
+   ],
+   "fire": [
+    "live/fireBed",
+    "live/fireL",
+    "live/fireR",
+    "live/fireC",
+    "live/fireCore",
+    "live/spark"
+   ],
+   "bee": [
+    "live/bee"
+   ],
+   "tree": [
+    "live/tree"
+   ],
+   "spruce": [
+    "live/spruce"
+   ]
+  }
+ },
+ "world": {
+  "title": "Мир по чертежу карты версии 10: земля плитками, участки, доска дел, заросшие участки из общих картинок",
+  "box": [
+   0,
+   -200,
+   800,
+   4400
+  ],
+  "tile": 200,
+  "overlap": 1,
+  "rows": 22,
+  "cols": 4,
+  "files": "d{D}/world/r{строка}c{столбец}.webp",
+  "note": "Плитка (строка r, столбец c) покрывает x от box[0] + c·tile, y от box[1] + r·tile; картинка шире на overlap с каждой стороны и ставится в (x − overlap, y − overlap).",
+  "open": {
+   "y0": -170,
+   "y1": 1760,
+   "note": "Открытая часть мира на старте: «Поляна» и лес вокруг. Ниже — закрытый лес до низа мира (4200)."
+  },
+  "plots": [
+   {
+    "id": "p1",
+    "x": 20,
+    "y": 160,
+    "w": 320,
+    "h": 300,
+    "floor": null,
+    "wild": []
+   },
+   {
+    "id": "p2",
+    "x": 460,
+    "y": 160,
+    "w": 320,
+    "h": 300,
+    "floor": {
+     "frame": "plot/wildFloor",
+     "at": [
+      460,
+      160
+     ],
+     "flip": true
+    },
+    "wild": [
+     {
+      "frame": "obj/spruce1",
+      "x": 630.7,
+      "y": 268.5,
+      "k": 1.07,
+      "flip": true
+     },
+     {
+      "frame": "obj/tree0",
+      "x": 715.1,
+      "y": 290.3,
+      "k": 1.09,
+      "flip": false
+     },
+     {
+      "frame": "obj/tree2",
+      "x": 534.9,
+      "y": 297.4,
+      "k": 1.12,
+      "flip": true
+     },
+     {
+      "frame": "obj/rock2",
+      "x": 758.9,
+      "y": 343.1,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/tree1",
+      "x": 567.3,
+      "y": 361.5,
+      "k": 1.1,
+      "flip": true
+     },
+     {
+      "frame": "obj/spruce0",
+      "x": 682.1,
+      "y": 366.2,
+      "k": 1.01,
+      "flip": false
+     },
+     {
+      "frame": "obj/bush1",
+      "x": 498.6,
+      "y": 397.8,
+      "k": 0.9,
+      "flip": true
+     },
+     {
+      "frame": "obj/bush0",
+      "x": 737.4,
+      "y": 406.1,
+      "k": 0.89,
+      "flip": false
+     },
+     {
+      "frame": "obj/stump",
+      "x": 539.9,
+      "y": 418.6,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/bush0",
+      "x": 614.1,
+      "y": 420.3,
+      "k": 0.91,
+      "flip": false
+     },
+     {
+      "frame": "obj/stump",
+      "x": 703.6,
+      "y": 427.4,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/rock1",
+      "x": 507.4,
+      "y": 441.3,
+      "k": 1,
+      "flip": true
+     },
+     {
+      "frame": "obj/rock0",
+      "x": 642.5,
+      "y": 442.9,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/log",
+      "x": 582.3,
+      "y": 450.1,
+      "k": 1,
+      "flip": true
+     }
+    ]
+   },
+   {
+    "id": "p3",
+    "x": 20,
+    "y": 520,
+    "w": 320,
+    "h": 300,
+    "floor": {
+     "frame": "plot/wildFloor",
+     "at": [
+      20,
+      520
+     ],
+     "flip": false
+    },
+    "wild": [
+     {
+      "frame": "obj/spruce1",
+      "x": 178.3,
+      "y": 636.2,
+      "k": 1.19,
+      "flip": false
+     },
+     {
+      "frame": "obj/tree0",
+      "x": 82.1,
+      "y": 651.4,
+      "k": 1.06,
+      "flip": false
+     },
+     {
+      "frame": "obj/tree2",
+      "x": 279.7,
+      "y": 663.4,
+      "k": 1.22,
+      "flip": true
+     },
+     {
+      "frame": "obj/rock2",
+      "x": 41.1,
+      "y": 705.8,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/tree1",
+      "x": 237.1,
+      "y": 724.5,
+      "k": 1.14,
+      "flip": true
+     },
+     {
+      "frame": "obj/spruce0",
+      "x": 117.4,
+      "y": 732.8,
+      "k": 1.14,
+      "flip": true
+     },
+     {
+      "frame": "obj/bush1",
+      "x": 315.8,
+      "y": 765.1,
+      "k": 0.95,
+      "flip": true
+     },
+     {
+      "frame": "obj/bush0",
+      "x": 53.8,
+      "y": 771.1,
+      "k": 0.89,
+      "flip": false
+     },
+     {
+      "frame": "obj/bush0",
+      "x": 191.3,
+      "y": 775,
+      "k": 0.98,
+      "flip": false
+     },
+     {
+      "frame": "obj/stump",
+      "x": 265.7,
+      "y": 779.1,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/stump",
+      "x": 110.7,
+      "y": 790.8,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/rock1",
+      "x": 292.2,
+      "y": 799.6,
+      "k": 1,
+      "flip": true
+     },
+     {
+      "frame": "obj/rock0",
+      "x": 152.4,
+      "y": 803.7,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/log",
+      "x": 206.4,
+      "y": 804.4,
+      "k": 1,
+      "flip": false
+     }
+    ]
+   },
+   {
+    "id": "p4",
+    "x": 460,
+    "y": 520,
+    "w": 320,
+    "h": 300,
+    "floor": {
+     "frame": "plot/wildFloor",
+     "at": [
+      460,
+      520
+     ],
+     "flip": true
+    },
+    "wild": [
+     {
+      "frame": "obj/spruce1",
+      "x": 620.9,
+      "y": 627.9,
+      "k": 1.01,
+      "flip": true
+     },
+     {
+      "frame": "obj/tree0",
+      "x": 711.5,
+      "y": 659.5,
+      "k": 1.18,
+      "flip": false
+     },
+     {
+      "frame": "obj/tree2",
+      "x": 527.1,
+      "y": 661.7,
+      "k": 1.08,
+      "flip": true
+     },
+     {
+      "frame": "obj/rock2",
+      "x": 752.7,
+      "y": 703.9,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/tree1",
+      "x": 558.8,
+      "y": 726.1,
+      "k": 1.2,
+      "flip": false
+     },
+     {
+      "frame": "obj/spruce0",
+      "x": 683.7,
+      "y": 730.8,
+      "k": 1.11,
+      "flip": true
+     },
+     {
+      "frame": "obj/bush1",
+      "x": 499.9,
+      "y": 764.6,
+      "k": 1.04,
+      "flip": true
+     },
+     {
+      "frame": "obj/bush0",
+      "x": 735,
+      "y": 764.7,
+      "k": 0.98,
+      "flip": false
+     },
+     {
+      "frame": "obj/bush0",
+      "x": 613.7,
+      "y": 782.6,
+      "k": 0.99,
+      "flip": false
+     },
+     {
+      "frame": "obj/stump",
+      "x": 699.3,
+      "y": 784.3,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/stump",
+      "x": 545.9,
+      "y": 784.8,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/rock1",
+      "x": 498.3,
+      "y": 802.4,
+      "k": 1,
+      "flip": true
+     },
+     {
+      "frame": "obj/rock0",
+      "x": 637.9,
+      "y": 807.8,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/log",
+      "x": 584.9,
+      "y": 812.4,
+      "k": 1,
+      "flip": true
+     }
+    ]
+   },
+   {
+    "id": "p5",
+    "x": 20,
+    "y": 880,
+    "w": 320,
+    "h": 300,
+    "floor": {
+     "frame": "plot/wildFloor",
+     "at": [
+      20,
+      880
+     ],
+     "flip": false
+    },
+    "wild": [
+     {
+      "frame": "obj/spruce1",
+      "x": 177.2,
+      "y": 993.5,
+      "k": 1.14,
+      "flip": true
+     },
+     {
+      "frame": "obj/tree0",
+      "x": 72.6,
+      "y": 1019,
+      "k": 1.24,
+      "flip": true
+     },
+     {
+      "frame": "obj/tree2",
+      "x": 267.2,
+      "y": 1021.5,
+      "k": 1.18,
+      "flip": false
+     },
+     {
+      "frame": "obj/rock2",
+      "x": 56.5,
+      "y": 1068.7,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/tree1",
+      "x": 242.4,
+      "y": 1079.8,
+      "k": 1.12,
+      "flip": false
+     },
+     {
+      "frame": "obj/spruce0",
+      "x": 126.7,
+      "y": 1085.3,
+      "k": 1.03,
+      "flip": false
+     },
+     {
+      "frame": "obj/bush1",
+      "x": 301.7,
+      "y": 1119.4,
+      "k": 0.88,
+      "flip": true
+     },
+     {
+      "frame": "obj/bush0",
+      "x": 68.9,
+      "y": 1129.1,
+      "k": 1.01,
+      "flip": false
+     },
+     {
+      "frame": "obj/stump",
+      "x": 252.1,
+      "y": 1139,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/bush0",
+      "x": 186,
+      "y": 1141.7,
+      "k": 0.92,
+      "flip": false
+     },
+     {
+      "frame": "obj/stump",
+      "x": 104.8,
+      "y": 1146.3,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/rock1",
+      "x": 296.7,
+      "y": 1157.6,
+      "k": 1,
+      "flip": true
+     },
+     {
+      "frame": "obj/rock0",
+      "x": 162.4,
+      "y": 1168.1,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/log",
+      "x": 215.1,
+      "y": 1171.2,
+      "k": 1,
+      "flip": false
+     }
+    ]
+   },
+   {
+    "id": "market",
+    "x": 460,
+    "y": 880,
+    "w": 320,
+    "h": 300,
+    "floor": {
+     "frame": "plot/wildFloor",
+     "at": [
+      460,
+      880
+     ],
+     "flip": true
+    },
+    "wild": [
+     {
+      "frame": "obj/spruce1",
+      "x": 633.1,
+      "y": 983.3,
+      "k": 1.04,
+      "flip": false
+     },
+     {
+      "frame": "obj/tree0",
+      "x": 719.7,
+      "y": 1011.1,
+      "k": 1.16,
+      "flip": true
+     },
+     {
+      "frame": "obj/tree2",
+      "x": 536.1,
+      "y": 1016.9,
+      "k": 1.16,
+      "flip": false
+     },
+     {
+      "frame": "obj/rock2",
+      "x": 758.2,
+      "y": 1065.5,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/tree1",
+      "x": 556.6,
+      "y": 1082.3,
+      "k": 1.17,
+      "flip": false
+     },
+     {
+      "frame": "obj/spruce0",
+      "x": 668.5,
+      "y": 1093.2,
+      "k": 1.09,
+      "flip": true
+     },
+     {
+      "frame": "obj/bush1",
+      "x": 493.1,
+      "y": 1119.5,
+      "k": 0.9,
+      "flip": true
+     },
+     {
+      "frame": "obj/bush0",
+      "x": 732.2,
+      "y": 1126.1,
+      "k": 1.01,
+      "flip": false
+     },
+     {
+      "frame": "obj/bush0",
+      "x": 612,
+      "y": 1135.8,
+      "k": 0.96,
+      "flip": false
+     },
+     {
+      "frame": "obj/stump",
+      "x": 541.8,
+      "y": 1140.3,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/stump",
+      "x": 706.9,
+      "y": 1146.8,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/rock1",
+      "x": 506.6,
+      "y": 1160.2,
+      "k": 1,
+      "flip": true
+     },
+     {
+      "frame": "obj/rock0",
+      "x": 650.2,
+      "y": 1166.1,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/log",
+      "x": 592.5,
+      "y": 1167.3,
+      "k": 1,
+      "flip": true
+     }
+    ]
+   },
+   {
+    "id": "p6",
+    "x": 20,
+    "y": 1240,
+    "w": 320,
+    "h": 300,
+    "floor": {
+     "frame": "plot/wildFloor",
+     "at": [
+      20,
+      1240
+     ],
+     "flip": false
+    },
+    "wild": [
+     {
+      "frame": "obj/spruce1",
+      "x": 176.6,
+      "y": 1350.8,
+      "k": 1.17,
+      "flip": false
+     },
+     {
+      "frame": "obj/tree0",
+      "x": 86.5,
+      "y": 1371.7,
+      "k": 1.07,
+      "flip": true
+     },
+     {
+      "frame": "obj/tree2",
+      "x": 275.7,
+      "y": 1381.1,
+      "k": 1.05,
+      "flip": false
+     },
+     {
+      "frame": "obj/rock2",
+      "x": 43.6,
+      "y": 1428,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/tree1",
+      "x": 228.5,
+      "y": 1441.3,
+      "k": 1.19,
+      "flip": true
+     },
+     {
+      "frame": "obj/spruce0",
+      "x": 131.7,
+      "y": 1448.5,
+      "k": 1.03,
+      "flip": true
+     },
+     {
+      "frame": "obj/bush1",
+      "x": 314.4,
+      "y": 1480.7,
+      "k": 0.98,
+      "flip": true
+     },
+     {
+      "frame": "obj/bush0",
+      "x": 64.4,
+      "y": 1485.8,
+      "k": 0.97,
+      "flip": false
+     },
+     {
+      "frame": "obj/bush0",
+      "x": 191.2,
+      "y": 1500.8,
+      "k": 0.97,
+      "flip": false
+     },
+     {
+      "frame": "obj/stump",
+      "x": 262.5,
+      "y": 1502.1,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/stump",
+      "x": 99.9,
+      "y": 1507.3,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/rock1",
+      "x": 304.5,
+      "y": 1523.6,
+      "k": 1,
+      "flip": true
+     },
+     {
+      "frame": "obj/log",
+      "x": 206.8,
+      "y": 1525.2,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/rock0",
+      "x": 161.3,
+      "y": 1527.3,
+      "k": 1,
+      "flip": false
+     }
+    ]
+   },
+   {
+    "id": "p7",
+    "x": 460,
+    "y": 1240,
+    "w": 320,
+    "h": 300,
+    "floor": {
+     "frame": "plot/wildFloor",
+     "at": [
+      460,
+      1240
+     ],
+     "flip": true
+    },
+    "wild": [
+     {
+      "frame": "obj/spruce1",
+      "x": 634.8,
+      "y": 1349.2,
+      "k": 1.09,
+      "flip": true
+     },
+     {
+      "frame": "obj/tree0",
+      "x": 713.8,
+      "y": 1370.5,
+      "k": 1.13,
+      "flip": true
+     },
+     {
+      "frame": "obj/tree2",
+      "x": 536.3,
+      "y": 1385.6,
+      "k": 1.19,
+      "flip": true
+     },
+     {
+      "frame": "obj/rock2",
+      "x": 753.3,
+      "y": 1429.8,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/tree1",
+      "x": 570,
+      "y": 1443.9,
+      "k": 1.09,
+      "flip": true
+     },
+     {
+      "frame": "obj/spruce0",
+      "x": 669.2,
+      "y": 1459.9,
+      "k": 1.19,
+      "flip": false
+     },
+     {
+      "frame": "obj/bush1",
+      "x": 483.5,
+      "y": 1480.6,
+      "k": 0.94,
+      "flip": true
+     },
+     {
+      "frame": "obj/bush0",
+      "x": 735.6,
+      "y": 1490.1,
+      "k": 0.86,
+      "flip": false
+     },
+     {
+      "frame": "obj/bush0",
+      "x": 601.4,
+      "y": 1503.3,
+      "k": 1.03,
+      "flip": false
+     },
+     {
+      "frame": "obj/stump",
+      "x": 543.7,
+      "y": 1504.1,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/stump",
+      "x": 706.7,
+      "y": 1507.1,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/rock0",
+      "x": 654.5,
+      "y": 1520.5,
+      "k": 1,
+      "flip": false
+     },
+     {
+      "frame": "obj/rock1",
+      "x": 505.7,
+      "y": 1520.9,
+      "k": 1,
+      "flip": true
+     },
+     {
+      "frame": "obj/log",
+      "x": 590.7,
+      "y": 1528.8,
+      "k": 1,
+      "flip": true
+     }
+    ]
+   }
+  ],
+  "board": {
+   "frame": "obj/board",
+   "at": [
+    400,
+    502
+   ]
+  },
+  "bakery": {
+   "plot": "p1",
+   "at": [
+    146,
+    363
+   ],
+   "note": "Пекарня стоит на первом участке: точка рисунка пекарни — сюда (как в макете: рисунок пекарни сдвинут на 18, 71)."
+  },
+  "home": {
+   "zoom": "far",
+   "y": -62
+  }
+ },
+ "ui": {
+  "title": "Детали интерфейса: d{D}/<имя>.webp, растягиваются по девяти частям (slice — верх, право, низ, лево в единицах; размеры w, h — в единицах)",
+  "parts": {
+   "ui/plaque": {
+    "w": 132,
+    "h": 62,
+    "slice": [
+     26,
+     24,
+     14,
+     24
+    ]
+   },
+   "ui/board": {
+    "w": 252,
+    "h": 172,
+    "slice": [
+     62,
+     22,
+     24,
+     22
+    ]
+   },
+   "ui/note": {
+    "w": 130,
+    "h": 72,
+    "slice": [
+     18,
+     16,
+     16,
+     18
+    ]
+   },
+   "ui/stamp": {
+    "w": 130,
+    "h": 58,
+    "slice": [
+     16,
+     16,
+     18,
+     16
+    ]
+   },
+   "ui/fab": {
+    "w": 54,
+    "h": 58,
+    "slice": null
+   },
+   "ui/ico-bread": {
+    "w": 28,
+    "h": 28,
+    "slice": null
+   },
+   "ui/ico-fish": {
+    "w": 28,
+    "h": 28,
+    "slice": null
+   },
+   "ui/ico-wood": {
+    "w": 28,
+    "h": 28,
+    "slice": null
+   },
+   "ui/ico-veg": {
+    "w": 28,
+    "h": 28,
+    "slice": null
+   },
+   "ui/ico-honey": {
+    "w": 28,
+    "h": 28,
+    "slice": null
+   },
+   "ui/ico-clay": {
+    "w": 28,
+    "h": 28,
+    "slice": null
+   },
+   "ui/ico-cloth": {
+    "w": 28,
+    "h": 28,
+    "slice": null
+   },
+   "ui/ico-coin": {
+    "w": 28,
+    "h": 28,
+    "slice": null
+   },
+   "ui/ico-tool": {
+    "w": 28,
+    "h": 28,
+    "slice": null
+   },
+   "ui/ico-home": {
+    "w": 28,
+    "h": 28,
+    "slice": null
+   },
+   "ui/ico-zoom": {
+    "w": 28,
+    "h": 28,
+    "slice": null
+   },
+   "ui/ico-up": {
+    "w": 28,
+    "h": 28,
+    "slice": null
+   },
+   "ui/ico-down": {
+    "w": 28,
+    "h": 28,
+    "slice": null
+   }
+  }
+ },
+ "grain": {
+  "title": "Зерно бумаги: плитка, сшитая сама с собой; кладётся поверх всей сцены",
+  "file": "d{D}/grain.png",
+  "size": 128,
+  "blend": "multiply",
+  "alpha": 0.32
+ },
+ "weights": {
+  "2": {
+   "sheets": [
+    {
+     "file": "sheet-0.json",
+     "image": "sheet-0.webp",
+     "w": 2032,
+     "h": 900,
+     "kb": 270,
+     "memMB": 6.98
+    }
+   ],
+   "sheetsKB": 270,
+   "sheetsMemMB": 7,
+   "groundTiles": 88,
+   "groundKB": 1057,
+   "groundTileKB": 12,
+   "groundTileMemMB": 0.62,
+   "groundAllMemMB": 54.6,
+   "grainKB": 185,
+   "grainMemMB": 0.25,
+   "uiKB": 72
+  },
+  "3": {
+   "sheets": [
+    {
+     "file": "sheet-0.json",
+     "image": "sheet-0.webp",
+     "w": 2024,
+     "h": 1648,
+     "kb": 484,
+     "memMB": 12.72
+    }
+   ],
+   "sheetsKB": 484,
+   "sheetsMemMB": 12.7,
+   "groundTiles": 88,
+   "groundKB": 1689,
+   "groundTileKB": 19,
+   "groundTileMemMB": 1.4,
+   "groundAllMemMB": 123.2,
+   "grainKB": 399,
+   "grainMemMB": 0.56,
+   "uiKB": 119
+  }
+ }
+}
