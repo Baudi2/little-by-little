@@ -394,10 +394,12 @@
     "live/bee"
    ],
    "tree": [
-    "live/tree"
+    "obj/tree0",
+    "obj/tree0-crown"
    ],
    "spruce": [
-    "live/spruce"
+    "obj/spruce0",
+    "obj/spruce0-crown"
    ]
   }
  },
@@ -420,6 +422,177 @@
    "y1": 1760,
    "note": "Открытая часть мира на старте: «Поляна» и лес вокруг. Ниже — закрытый лес до низа мира (4200)."
   },
+  "crownOffsets": {
+   "obj/tree0": -32,
+   "obj/tree1": -30,
+   "obj/tree2": -32,
+   "obj/spruce0": -20,
+   "obj/spruce1": -20
+  },
+  "edgeTrees": [
+   {
+    "frame": "obj/tree0",
+    "x": 143.9,
+    "y": 94.2,
+    "k": 1.12,
+    "flip": false
+   },
+   {
+    "frame": "obj/spruce1",
+    "x": 218,
+    "y": 96.6,
+    "k": 1.09,
+    "flip": true
+   },
+   {
+    "frame": "obj/tree2",
+    "x": 289.9,
+    "y": 101,
+    "k": 1.23,
+    "flip": false
+   },
+   {
+    "frame": "obj/spruce1",
+    "x": 697.2,
+    "y": 99,
+    "k": 1.09,
+    "flip": true
+   },
+   {
+    "frame": "obj/tree1",
+    "x": 359,
+    "y": 97.3,
+    "k": 1.1,
+    "flip": false
+   },
+   {
+    "frame": "obj/tree2",
+    "x": 494.1,
+    "y": 102.5,
+    "k": 1.17,
+    "flip": true
+   },
+   {
+    "frame": "obj/spruce0",
+    "x": 14,
+    "y": 107,
+    "k": 1.19,
+    "flip": false
+   },
+   {
+    "frame": "obj/tree1",
+    "x": 432.3,
+    "y": 112.3,
+    "k": 1.28,
+    "flip": true
+   },
+   {
+    "frame": "obj/spruce0",
+    "x": 79,
+    "y": 109.4,
+    "k": 1.08,
+    "flip": false
+   },
+   {
+    "frame": "obj/tree0",
+    "x": 772.7,
+    "y": 107.1,
+    "k": 1.09,
+    "flip": true
+   },
+   {
+    "frame": "obj/tree1",
+    "x": 632.2,
+    "y": 110.8,
+    "k": 1.16,
+    "flip": false
+   },
+   {
+    "frame": "obj/spruce1",
+    "x": 565.9,
+    "y": 114.1,
+    "k": 1.11,
+    "flip": true
+   },
+   {
+    "frame": "obj/tree0",
+    "x": 773.6,
+    "y": 1675.9,
+    "k": 1.07,
+    "flip": false
+   },
+   {
+    "frame": "obj/spruce1",
+    "x": 497.8,
+    "y": 1681.5,
+    "k": 1.06,
+    "flip": true
+   },
+   {
+    "frame": "obj/tree2",
+    "x": 86.6,
+    "y": 1683,
+    "k": 1.18,
+    "flip": false
+   },
+   {
+    "frame": "obj/spruce1",
+    "x": 14,
+    "y": 1681.7,
+    "k": 1.01,
+    "flip": true
+   },
+   {
+    "frame": "obj/tree1",
+    "x": 702.1,
+    "y": 1682.5,
+    "k": 1.09,
+    "flip": false
+   },
+   {
+    "frame": "obj/tree2",
+    "x": 565.5,
+    "y": 1687.1,
+    "k": 1.19,
+    "flip": true
+   },
+   {
+    "frame": "obj/spruce0",
+    "x": 153.2,
+    "y": 1689.1,
+    "k": 1.02,
+    "flip": false
+   },
+   {
+    "frame": "obj/tree1",
+    "x": 632.6,
+    "y": 1690.4,
+    "k": 1.13,
+    "flip": true
+   },
+   {
+    "frame": "obj/spruce0",
+    "x": 364.1,
+    "y": 1695.9,
+    "k": 1.16,
+    "flip": false
+   },
+   {
+    "frame": "obj/tree0",
+    "x": 295,
+    "y": 1694.6,
+    "k": 1.19,
+    "flip": true
+   },
+   {
+    "frame": "obj/tree1",
+    "x": 227.7,
+    "y": 1698.7,
+    "k": 1.23,
+    "flip": false
+   }
+  ],
+  "tileRevision": "7868659c0776",
   "plots": [
    {
     "id": "p1",
@@ -453,14 +626,14 @@
       "flip": true
      },
      {
-      "frame": "obj/tree0",
+      "frame": "obj/tree2",
       "x": 715.1,
       "y": 290.3,
       "k": 1.09,
       "flip": false
      },
      {
-      "frame": "obj/tree2",
+      "frame": "obj/tree1",
       "x": 534.9,
       "y": 297.4,
       "k": 1.12,
@@ -474,7 +647,7 @@
       "flip": false
      },
      {
-      "frame": "obj/tree1",
+      "frame": "obj/tree0",
       "x": 567.3,
       "y": 361.5,
       "k": 1.1,
@@ -561,7 +734,7 @@
     },
     "wild": [
      {
-      "frame": "obj/spruce1",
+      "frame": "obj/spruce0",
       "x": 178.3,
       "y": 636.2,
       "k": 1.19,
@@ -596,7 +769,7 @@
       "flip": true
      },
      {
-      "frame": "obj/spruce0",
+      "frame": "obj/spruce1",
       "x": 117.4,
       "y": 732.8,
       "k": 1.14,
@@ -683,14 +856,14 @@
       "flip": true
      },
      {
-      "frame": "obj/tree0",
+      "frame": "obj/tree1",
       "x": 711.5,
       "y": 659.5,
       "k": 1.18,
       "flip": false
      },
      {
-      "frame": "obj/tree2",
+      "frame": "obj/tree0",
       "x": 527.1,
       "y": 661.7,
       "k": 1.08,
@@ -704,7 +877,7 @@
       "flip": false
      },
      {
-      "frame": "obj/tree1",
+      "frame": "obj/tree2",
       "x": 558.8,
       "y": 726.1,
       "k": 1.2,
@@ -791,21 +964,21 @@
     },
     "wild": [
      {
-      "frame": "obj/spruce1",
+      "frame": "obj/spruce0",
       "x": 177.2,
       "y": 993.5,
       "k": 1.14,
       "flip": true
      },
      {
-      "frame": "obj/tree0",
+      "frame": "obj/tree2",
       "x": 72.6,
       "y": 1019,
       "k": 1.24,
       "flip": true
      },
      {
-      "frame": "obj/tree2",
+      "frame": "obj/tree1",
       "x": 267.2,
       "y": 1021.5,
       "k": 1.18,
@@ -819,14 +992,14 @@
       "flip": false
      },
      {
-      "frame": "obj/tree1",
+      "frame": "obj/tree0",
       "x": 242.4,
       "y": 1079.8,
       "k": 1.12,
       "flip": false
      },
      {
-      "frame": "obj/spruce0",
+      "frame": "obj/spruce1",
       "x": 126.7,
       "y": 1085.3,
       "k": 1.03,
@@ -1021,21 +1194,21 @@
     },
     "wild": [
      {
-      "frame": "obj/spruce1",
+      "frame": "obj/spruce0",
       "x": 176.6,
       "y": 1350.8,
       "k": 1.17,
       "flip": false
      },
      {
-      "frame": "obj/tree0",
+      "frame": "obj/tree1",
       "x": 86.5,
       "y": 1371.7,
       "k": 1.07,
       "flip": true
      },
      {
-      "frame": "obj/tree2",
+      "frame": "obj/tree0",
       "x": 275.7,
       "y": 1381.1,
       "k": 1.05,
@@ -1049,14 +1222,14 @@
       "flip": false
      },
      {
-      "frame": "obj/tree1",
+      "frame": "obj/tree2",
       "x": 228.5,
       "y": 1441.3,
       "k": 1.19,
       "flip": true
      },
      {
-      "frame": "obj/spruce0",
+      "frame": "obj/spruce1",
       "x": 131.7,
       "y": 1448.5,
       "k": 1.03,
@@ -1143,14 +1316,14 @@
       "flip": true
      },
      {
-      "frame": "obj/tree0",
+      "frame": "obj/tree2",
       "x": 713.8,
       "y": 1370.5,
       "k": 1.13,
       "flip": true
      },
      {
-      "frame": "obj/tree2",
+      "frame": "obj/tree1",
       "x": 536.3,
       "y": 1385.6,
       "k": 1.19,
@@ -1164,7 +1337,7 @@
       "flip": false
      },
      {
-      "frame": "obj/tree1",
+      "frame": "obj/tree0",
       "x": 570,
       "y": 1443.9,
       "k": 1.09,
@@ -1408,17 +1581,17 @@
     {
      "file": "sheet-0.json",
      "image": "sheet-0.webp",
-     "w": 1996,
-     "h": 920,
-     "kb": 295,
-     "memMB": 7.01
+     "w": 2048,
+     "h": 928,
+     "kb": 300,
+     "memMB": 7.25
     }
    ],
-   "sheetsKB": 295,
-   "sheetsMemMB": 7,
+   "sheetsKB": 300,
+   "sheetsMemMB": 7.3,
    "groundTiles": 88,
-   "groundKB": 1057,
-   "groundTileKB": 12,
+   "groundKB": 720,
+   "groundTileKB": 8,
    "groundTileMemMB": 0.62,
    "groundAllMemMB": 54.6,
    "grainKB": 185,
@@ -1431,16 +1604,16 @@
      "file": "sheet-0.json",
      "image": "sheet-0.webp",
      "w": 2044,
-     "h": 1764,
-     "kb": 528,
-     "memMB": 13.75
+     "h": 1696,
+     "kb": 547,
+     "memMB": 13.22
     }
    ],
-   "sheetsKB": 528,
-   "sheetsMemMB": 13.8,
+   "sheetsKB": 547,
+   "sheetsMemMB": 13.2,
    "groundTiles": 88,
-   "groundKB": 1689,
-   "groundTileKB": 19,
+   "groundKB": 1129,
+   "groundTileKB": 13,
    "groundTileMemMB": 1.4,
    "groundAllMemMB": 123.2,
    "grainKB": 399,
