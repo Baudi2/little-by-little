@@ -1,5 +1,5 @@
 {
- "made": "2026-11-26",
+ "made": "2026-11-27",
  "by": "tools/bake.cjs",
  "units": "Единицы рисунка. Картинка плотности ×D — D точек на единицу; в листах PixiJS это meta.scale. Опорная точка картинки (anchor) стоит в точке рисунка предмета или в точке вращения части.",
  "densities": [
@@ -234,10 +234,6 @@
      "footL": "tabby/footL",
      "footR": "tabby/footR",
      "body": "tabby/body",
-     "earL": "tabby/earL",
-     "earR": "tabby/earR",
-     "head": "tabby/head",
-     "blink": "tabby/blink",
      "armL": "tabby/armL",
      "armR": "tabby/armR"
     }
@@ -1412,14 +1408,14 @@
     {
      "file": "sheet-0.json",
      "image": "sheet-0.webp",
-     "w": 2008,
-     "h": 924,
-     "kb": 304,
-     "memMB": 7.08
+     "w": 1996,
+     "h": 920,
+     "kb": 295,
+     "memMB": 7.01
     }
    ],
-   "sheetsKB": 304,
-   "sheetsMemMB": 7.1,
+   "sheetsKB": 295,
+   "sheetsMemMB": 7,
    "groundTiles": 88,
    "groundKB": 1057,
    "groundTileKB": 12,
@@ -1434,14 +1430,14 @@
     {
      "file": "sheet-0.json",
      "image": "sheet-0.webp",
-     "w": 2036,
-     "h": 1788,
-     "kb": 541,
-     "memMB": 13.89
+     "w": 2044,
+     "h": 1764,
+     "kb": 528,
+     "memMB": 13.75
     }
    ],
-   "sheetsKB": 541,
-   "sheetsMemMB": 13.9,
+   "sheetsKB": 528,
+   "sheetsMemMB": 13.8,
    "groundTiles": 88,
    "groundKB": 1689,
    "groundTileKB": 19,
